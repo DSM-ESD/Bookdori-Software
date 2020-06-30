@@ -52,7 +52,7 @@ private:
     
     std::vector<matrix<rgb_pixel>> faces;
     
-    std::vector<matrix<rgb_pixel>> find_faces(matrix<rgb_pixel>& _img)
+    void find_faces(matrix<rgb_pixel>& _img)
     {
         faces.clear();
         for (auto face : detector(_img))
@@ -72,7 +72,7 @@ public:
         deserialize("dlib_face_recognition_resnet_model_v1.dat") >> net;
     }
 
-    std::vector<matrix<float, 0, 1>> get_face_descriptors(matrix<rgb_pixel>& _img)
+    matrix<float, 0, 1> get_face_descriptors(matrix<rgb_pixel>& _img)
     {
         std::vector<matrix<float, 0, 1>> face_descriptors;
         find_faces(_img);
@@ -80,12 +80,13 @@ public:
         if (faces.size() == 0)
         {
             cout << "No faces found in image!" << endl;
-            return face_descriptors;
+            throw "cant find face";
         }
 
         face_descriptors = net(faces);
-        cout << trans(face_descriptors[0]) << endl;
-        return face_descriptors;
+        //cout << face_descriptors.size() << endl;
+        //cout << trans(face_descriptors[0]) << endl;
+        return face_descriptors[0];
 
     }
 };
