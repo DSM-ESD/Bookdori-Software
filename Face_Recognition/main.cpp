@@ -11,6 +11,10 @@
 
 using namespace dlib;
 
+
+void find_face(std::vector<std::pair<std::string, matrix<float, 0, 1>>>& db);
+
+
 int main()try
 {
 	std::vector<std::pair<std::string, matrix<float, 0, 1>>> db;
@@ -76,6 +80,26 @@ int main()try
 
 	// ------------------------------end face encoding-----------------------------------------
 
+	while (1)
+	{
+		find_face(db);
+	}
+
+
+}
+catch (const std::exception& e)
+{
+	std::cerr << e.what() << std::endl;
+}
+catch (...)
+{
+	std::cerr << "Unkown exception\n" << std::endl;
+}
+
+
+void find_face(std::vector<std::pair<std::string, matrix<float, 0, 1>>>& db)
+{
+	face_encode face_encoder;
 	string test_img_path;
 
 	std::cin >> test_img_path;
@@ -86,7 +110,7 @@ int main()try
 
 	matrix<float, 0, 1> test_encode = face_encoder.get_face_descriptors(test_img);
 
-	std::pair<std::string, float> min = std::make_pair("Unknown", 0.5);
+	std::pair<std::string, float> min = std::make_pair("Unknown", 0.4);
 
 	for (auto i : db)
 	{
@@ -100,14 +124,4 @@ int main()try
 
 	std::cout << "가장 비슷함 : " << min.first << std::endl;
 	std::cout << "유사도 : " << min.second << std::endl;
-
-
-}
-catch (const std::exception& e)
-{
-	std::cerr << e.what() << std::endl;
-}
-catch (...)
-{
-	std::cerr << "Unkown exception\n" << std::endl;
 }
