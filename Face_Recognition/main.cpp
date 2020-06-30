@@ -16,8 +16,17 @@ int main()try
 	intptr_t img_handle;
 	_finddata_t file_search;
 	_finddata_t img_search;
+
+	if ((folder_handle = _findfirst((data_path + "\\*.*").c_str(), &file_search)) == -1L)
+	{
+		throw logic_error(data_path + " 폴더 없음.");
+	}
 }
 catch (const std::exception& e)
 {
-	cout << e.what() << endl;
+	cerr << e.what() << endl;
+}
+catch (...)
+{
+	cerr << "Unkown exception\n" << endl;
 }
