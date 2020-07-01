@@ -12,10 +12,10 @@
 using namespace dlib;
 
 
-void find_face(std::vector<std::pair<std::string, matrix<float, 0, 1>>>& db);
+void find_face(std::string path, std::vector<std::pair<std::string, matrix<float, 0, 1>>>& db);
 
 
-int main()try
+int main() try
 {
 	std::vector<std::pair<std::string, matrix<float, 0, 1>>> db;
 
@@ -79,12 +79,46 @@ int main()try
 	
 
 	// ------------------------------end face encoding-----------------------------------------
+	
+	data_path = ".\\testset";
 
-	while (1)
+	if ((folder_handle = _findfirst((data_path + "\\*.*").c_str(), &file_search)) == -1L)
 	{
-		find_face(db);
+		throw std::logic_error(data_path + " 폴더 없음.");
 	}
 
+	if ((img_handle = _findfirst((data_path + "\\*.jpg*").c_str(), &img_search)) == -1L)
+	{
+		throw std::logic_error("testset에 이미지 없음.");
+	}
+
+	do
+	{
+		std::string img_Path = img_search.name;
+		std::cout << "파일명 : " << img_Path << std::endl;
+
+		try
+		{
+			find_face(data_path + "\\" + img_Path, db);
+		}
+		catch (const char* e_str)
+		{
+			std::cerr << e_str << std::endl;
+		}
+		catch (const std::exception & e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
+		catch (...)
+		{
+			std::cerr << "Unkown exception : Cant encode this face!!\n" << std::endl;
+		}
+
+
+	} while (_findnext(img_handle, &img_search) == 0);
+	
+	
+	cin.get();
 
 }
 catch (const std::exception& e)
@@ -97,22 +131,19 @@ catch (...)
 }
 
 
-void find_face(std::vector<std::pair<std::string, matrix<float, 0, 1>>>& db)
+void find_face(std::string path, std::vector<std::pair<std::string, matrix<float, 0, 1>>>& db)
 {
 	face_encode face_encoder;
-	string test_img_path;
-
-	std::cin >> test_img_path;
 
 	matrix<rgb_pixel> test_img;
 
-	load_image(test_img, test_img_path);
+	load_image(test_img, path);
 
 	matrix<float, 0, 1> test_encode = face_encoder.get_face_descriptors(test_img);
 
-	std::pair<std::string, float> min = std::make_pair("Unknown", 0.35);
+	std::pair<std::string, float> min = std::make_pair("Unknown", 0.6);
 
-	for (auto i : db)
+	for (const auto& i : db)
 	{
 		float v = length(test_encode - i.second);
 		if (v < min.second)
