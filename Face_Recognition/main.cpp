@@ -110,7 +110,7 @@ void find_face(std::vector<std::pair<std::string, matrix<float, 0, 1>>>& db)
 
 	matrix<float, 0, 1> test_encode = face_encoder.get_face_descriptors(test_img);
 
-	std::pair<std::string, float> min = std::make_pair("Unknown", 0.4);
+	std::pair<std::string, float> min = std::make_pair("Unknown", 0.35);
 
 	for (auto i : db)
 	{
@@ -124,4 +124,5 @@ void find_face(std::vector<std::pair<std::string, matrix<float, 0, 1>>>& db)
 
 	std::cout << "가장 비슷함 : " << min.first << std::endl;
 	std::cout << "유사도 : " << min.second << std::endl;
+	std::cout << std::endl;
 }

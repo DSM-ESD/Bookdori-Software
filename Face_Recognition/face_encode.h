@@ -74,6 +74,8 @@ public:
 
     matrix<float, 0, 1> get_face_descriptors(matrix<rgb_pixel>& _img)
     {
+
+        clock_t begin_t = clock();
         std::vector<matrix<float, 0, 1>> face_descriptors;
         find_faces(_img);
 
@@ -86,6 +88,8 @@ public:
         face_descriptors = net(faces);
         //cout << face_descriptors.size() << endl;
         //cout << trans(face_descriptors[0]) << endl;
+        cout << "encoding time : " << clock() - begin_t << "ms" << endl;
+        cout << endl;
         return face_descriptors[0];
 
     }
